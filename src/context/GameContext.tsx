@@ -31,7 +31,18 @@ const GameContext = createContext<GameContextType | undefined>(undefined);
 export const GameProvider = ({ children }: Props) => {
   const [config, setConfigState] = useState<Config>(defaultConfig);
 
-  const setConfig = (cfg: Config) => setConfigState(cfg);
+  const validateLevelHierarchy = (cfg: Config) => {
+  if (
+    cfg.level === "god" && cfg.timePerWord >= 2000 ||
+    cfg.level === "veteran" && cfg.timePerWord >= 3000
+  ) {
+    throw new Error("Nivel no respeta jerarquía. God < Veteran < Normal.");
+  }
+};
+  const setConfig = (cfg: Config) => {
+  validateLevelHierarchy(cfg);
+  setConfigState(cfg);
+};
   const resetConfig = () => setConfigState(defaultConfig);
 
   return (
