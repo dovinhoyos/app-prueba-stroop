@@ -20,9 +20,9 @@ interface Props {
 }
 
 const defaultConfig: Config = {
-  level: "god",
-  timePerWord: 1000,
-  totalDuration: 10000,
+  level: "normal",
+  timePerWord: 3000,
+  totalDuration: 30000,
   isCustom: false,
 };
 
@@ -32,11 +32,13 @@ export const GameProvider = ({ children }: Props) => {
   const [config, setConfigState] = useState<Config>(defaultConfig);
 
   const validateLevelHierarchy = (cfg: Config) => {
+    if (!cfg.isCustom) return; // 🚫 No validar presets
+
     if (
-      (cfg.level === "god" && cfg.timePerWord >= 1000) ||
-      (cfg.level === "veteran" && cfg.timePerWord >= 2000)
+      (cfg.level === "god" && cfg.timePerWord >= 2000) ||
+      (cfg.level === "veteran" && cfg.timePerWord >= 3000)
     ) {
-      throw new Error("Nivel no respeta jerarquía. God < Veteran < Normal.");
+      throw new Error("Nivel o tiempo por palabra incorrecto");
     }
   };
 
