@@ -1,6 +1,7 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { useGame } from "../context/GameContext";
-import { useEffect } from "react";
+import { useGameContext } from "../context/GameContext";
+import { useEffect, useRef } from "react";
+import { addScore } from "../db/db";
 
 interface ResultData {
   correct: number;
@@ -20,7 +21,9 @@ interface ScoreEntry {
 const Results = () => {
   const { state } = useLocation();
   const navigate = useNavigate();
-  const { config } = useGame();
+  const { config } = useGameContext();
+
+  const hasSavedRef = useRef(false);
 
   const result: ResultData = state;
 
@@ -28,27 +31,21 @@ const Results = () => {
   const percentage = total ? Math.round((result.correct / total) * 100) : 0;
 
   useEffect(() => {
-    if (!config.isCustom) {
-      const prev = JSON.parse(
-        localStorage.getItem("strooper_scores") || "[]"
-      ) as ScoreEntry[];
+  if (!config.isCustom && !hasSavedRef.current) {
+    hasSavedRef.current = true;
 
-      const newEntry: ScoreEntry = {
-        id: crypto.randomUUID(),
-        correct: result.correct,
-        percentage,
-        averageTime: result.averageTime,
-        level: config.level,
-        date: new Date().toISOString(),
-      };
+    const newEntry: ScoreEntry = {
+      id: crypto.randomUUID(),
+      correct: result.correct,
+      percentage,
+      averageTime: result.averageTime,
+      level: config.level,
+      date: new Date().toISOString(),
+    };
 
-      const updated = [...prev, newEntry]
-        .sort((a, b) => b.percentage - a.percentage)
-        .slice(0, 5);
-
-      localStorage.setItem("strooper_scores", JSON.stringify(updated));
-    }
-  }, []);
+    addScore(newEntry).catch(console.error);
+  }
+}, []);
 
   return (
     <div className="p-6 text-center">

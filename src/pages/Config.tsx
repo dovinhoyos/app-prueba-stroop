@@ -1,7 +1,7 @@
-import { useGame } from "../context/GameContext";
+import { useGameContext } from "../context/GameContext";
 
 const Config = () => {
-  const { config, resetConfig } = useGame();
+  const { config, resetConfig } = useGameContext();
 
   return (
     <div className="p-6 max-w-xl mx-auto">

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useGame } from "../context/GameContext";
+import { useGameContext } from "../context/GameContext";
 import { useNavigate } from "react-router-dom";
 
 type Color =
@@ -37,7 +37,7 @@ const COLORS: Color[] = [
 const getRandomColor = () => COLORS[Math.floor(Math.random() * COLORS.length)];
 
 const Game = () => {
-  const { config } = useGame();
+  const { config } = useGameContext();
   const navigate = useNavigate();
 
   const [word, setWord] = useState<Color>(getRandomColor());
@@ -59,12 +59,13 @@ const Game = () => {
     const isActuallyCorrect = word === color;
     const isRight = isCorrect === isActuallyCorrect;
 
-    if (isRight) {
-      setCorrect((prev) => prev + 1);
-      setHistory((prev) => [...prev, { time: Date.now() - startTime }]);
-    } else {
+    if (!isRight) {
       setIncorrect((prev) => prev + 1);
+      return;
     }
+
+    setCorrect((prev) => prev + 1);
+    setHistory((prev) => [...prev, { time: Date.now() - startTime }]);
 
     nextWord();
   };

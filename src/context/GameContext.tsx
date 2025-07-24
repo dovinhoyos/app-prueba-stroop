@@ -9,13 +9,6 @@ interface Config {
   isCustom: boolean;
 }
 
-const defaultConfig: Config = {
-  level: "normal",
-  timePerWord: 3000,
-  totalDuration: 30000,
-  isCustom: false,
-};
-
 interface GameContextType {
   config: Config;
   setConfig: (config: Config) => void;
@@ -26,23 +19,32 @@ interface Props {
   children: ReactNode;
 }
 
+const defaultConfig: Config = {
+  level: "god",
+  timePerWord: 1000,
+  totalDuration: 10000,
+  isCustom: false,
+};
+
 const GameContext = createContext<GameContextType | undefined>(undefined);
 
 export const GameProvider = ({ children }: Props) => {
   const [config, setConfigState] = useState<Config>(defaultConfig);
 
   const validateLevelHierarchy = (cfg: Config) => {
-  if (
-    cfg.level === "god" && cfg.timePerWord >= 2000 ||
-    cfg.level === "veteran" && cfg.timePerWord >= 3000
-  ) {
-    throw new Error("Nivel no respeta jerarquía. God < Veteran < Normal.");
-  }
-};
+    if (
+      (cfg.level === "god" && cfg.timePerWord >= 1000) ||
+      (cfg.level === "veteran" && cfg.timePerWord >= 2000)
+    ) {
+      throw new Error("Nivel no respeta jerarquía. God < Veteran < Normal.");
+    }
+  };
+
   const setConfig = (cfg: Config) => {
-  validateLevelHierarchy(cfg);
-  setConfigState(cfg);
-};
+    validateLevelHierarchy(cfg);
+    setConfigState(cfg);
+  };
+
   const resetConfig = () => setConfigState(defaultConfig);
 
   return (
@@ -52,7 +54,7 @@ export const GameProvider = ({ children }: Props) => {
   );
 };
 
-export const useGame = (): GameContextType => {
+export const useGameContext = (): GameContextType => {
   const ctx = useContext(GameContext);
   if (!ctx) throw new Error("useGame debe usarse dentro de GameProvider");
   return ctx;

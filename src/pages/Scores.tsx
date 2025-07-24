@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { getTopScores, ScoreEntry } from "../db/db";
 
 interface ScoreEntry {
   id: string;
@@ -7,17 +8,13 @@ interface ScoreEntry {
   averageTime: number;
   level: string;
   date: string;
-};
+}
 
 const Scores = () => {
   const [scores, setScores] = useState<ScoreEntry[]>([]);
 
   useEffect(() => {
-    const data = localStorage.getItem("strooper_scores");
-    if (data) {
-      const parsed: ScoreEntry[] = JSON.parse(data);
-      setScores(parsed);
-    }
+    getTopScores().then(setScores);
   }, []);
 
   if (scores.length === 0) {
