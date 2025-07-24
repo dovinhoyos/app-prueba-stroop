@@ -29,7 +29,9 @@ const Results = () => {
 
   useEffect(() => {
     if (!config.isCustom) {
-      const prev = JSON.parse(localStorage.getItem("strooper_scores") || "[]") as ScoreEntry[];
+      const prev = JSON.parse(
+        localStorage.getItem("strooper_scores") || "[]"
+      ) as ScoreEntry[];
 
       const newEntry: ScoreEntry = {
         id: crypto.randomUUID(),
@@ -52,12 +54,23 @@ const Results = () => {
     <div className="p-6 text-center">
       <h1 className="text-3xl font-bold mb-4">🎉 Resultados</h1>
 
-      <p className="text-lg">Correctas: <strong>{result.correct}</strong></p>
-      <p className="text-lg">Incorrectas: <strong>{result.incorrect}</strong></p>
-      <p className="text-lg">Porcentaje de aciertos: <strong>{percentage}%</strong></p>
-      <p className="text-lg">Promedio de respuesta: <strong>{result.averageTime}ms</strong></p>
+      <p className="text-lg">
+        Correctas: <strong>{result.correct}</strong>
+      </p>
+      <p className="text-lg">
+        Incorrectas: <strong>{result.incorrect}</strong>
+      </p>
+      <p className="text-lg">
+        Porcentaje de aciertos: <strong>{percentage}%</strong>
+      </p>
+      <p className="text-lg">
+        Promedio de respuesta: <strong>{result.averageTime}ms</strong>
+      </p>
       <p className="text-sm mt-4 text-gray-500">
-        Juego: <strong>{config.isCustom ? "Personalizado" : "Por defecto"} ({config.level})</strong>
+        Juego:{" "}
+        <strong>
+          {config.isCustom ? "Personalizado" : "Por defecto"} ({config.level})
+        </strong>
       </p>
 
       <button

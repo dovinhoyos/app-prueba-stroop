@@ -70,34 +70,35 @@ const Game = () => {
   };
 
   useEffect(() => {
-    const gameInterval = setInterval(() => {
-      setTimeLeft((prev) => {
-        if (prev <= config.timePerWord) {
-          clearInterval(gameInterval);
-          navigate("/results", {
-            state: {
-              correct,
-              incorrect,
-              averageTime: history.length
-                ? Math.round(
-                    history.reduce((acc, h) => acc + h.time, 0) / history.length
-                  )
-                : 0,
-            },
-          });
-          return 0;
-        }
-        return prev - config.timePerWord;
-      });
+    const interval = setInterval(() => {
+      setTimeLeft((prev) => prev - config.timePerWord);
     }, config.timePerWord);
 
-    setIntervalId(gameInterval);
     setStartTime(Date.now());
+    setIntervalId(interval);
 
-    return () => {
-      clearInterval(gameInterval);
-    };
+    return () => clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+    if (timeLeft <= 0) {
+      if (intervalId) clearInterval(intervalId);
+
+      const averageTime = history.length
+        ? Math.round(
+            history.reduce((acc, h) => acc + h.time, 0) / history.length
+          )
+        : 0;
+
+      navigate("/results", {
+        state: {
+          correct,
+          incorrect,
+          averageTime,
+        },
+      });
+    }
+  }, [timeLeft]);
 
   return (
     <div className="p-6 text-center space-y-4">
