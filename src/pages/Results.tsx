@@ -2,20 +2,20 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useGame } from "../context/GameContext";
 import { useEffect } from "react";
 
-type ResultData = {
+interface ResultData {
   correct: number;
   incorrect: number;
   averageTime: number;
-};
+}
 
-type ScoreEntry = {
+interface ScoreEntry {
   id: string;
   correct: number;
   percentage: number;
   averageTime: number;
   level: string;
   date: string;
-};
+}
 
 const Results = () => {
   const { state } = useLocation();
