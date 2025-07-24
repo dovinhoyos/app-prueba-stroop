@@ -2,9 +2,37 @@ import { useEffect, useState } from "react";
 import { useGame } from "../context/GameContext";
 import { useNavigate } from "react-router-dom";
 
-type Color = "Amarillo" | "Azul" | "Naranja" | "Negro" | "Blanco" | "Rojo" | "Verde" | "Púrpura";
+type Color =
+  | "Amarillo"
+  | "Azul"
+  | "Naranja"
+  | "Negro"
+  | "Blanco"
+  | "Rojo"
+  | "Verde"
+  | "Púrpura";
 
-const COLORS: Color[] = ["Amarillo", "Azul", "Naranja", "Negro", "Blanco", "Rojo", "Verde", "Púrpura"];
+const COLOR_MAP: Record<Color, string> = {
+  Amarillo: "yellow",
+  Azul: "blue",
+  Naranja: "orange",
+  Negro: "black",
+  Blanco: "white",
+  Rojo: "red",
+  Verde: "green",
+  Púrpura: "purple",
+};
+
+const COLORS: Color[] = [
+  "Amarillo",
+  "Azul",
+  "Naranja",
+  "Negro",
+  "Blanco",
+  "Rojo",
+  "Verde",
+  "Púrpura",
+];
 
 const getRandomColor = () => COLORS[Math.floor(Math.random() * COLORS.length)];
 
@@ -74,11 +102,13 @@ const Game = () => {
   return (
     <div className="p-6 text-center space-y-4">
       <h1 className="text-2xl font-bold">Juego en curso</h1>
-      <div className="text-xl">Tiempo restante: {(timeLeft / 1000).toFixed(1)}s</div>
+      <div className="text-xl">
+        Tiempo restante: {(timeLeft / 1000).toFixed(1)}s
+      </div>
 
       <div
         className="text-5xl font-black p-4 border rounded"
-        style={{ color: color.toLowerCase() }}
+        style={{ color: COLOR_MAP[color] }}
       >
         {word.toUpperCase()}
       </div>
